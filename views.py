@@ -2,11 +2,11 @@ from django.shortcuts import render
 # from django.contrib.postgres.fields import ArrayField<
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from app.models import Calificacion,Categoria,Pelicula
+from app.models import Calificacion,Categoria,Pelicula,Comentario
 from django.contrib.auth.models import User
 from django.db.models import Avg, Count	
 from django.contrib.auth import logout
-
+from django.contrib.auth import authenticate, login
 
 def index(request):
     return HttpResponse("Hola, mundo")
@@ -48,11 +48,14 @@ def verpeli1(request,id):
 
     peli =Pelicula.objects.get(pk=id)
     promedio= Calificacion.objects.values('pelicula').annotate(average_rating=Avg('valor'))
+    # comentario= Comentario.objects.values('pelicula')
     contexto = {
       'peli':peli,
-      'promedio' : promedio,
-    }
+      'promedio' : promedio}
+    #   'comentario': comentario}
     return render(request, "app/verpeli1.html", contexto)
+
+
 
 
 def ultipeli1(request):
@@ -75,7 +78,14 @@ def cartelera1(request):
 
 
 def buscarpeli1(request):
+# parametro = request.POST['parametro']
+# busca=Pelicula.objects.filter(titulo_contain=parametro)
+# lista_categorias=Categoria.objects.all()
 
+# contexto={
+#     'busca':busca,
+#     'lista_categorias': lista_categorias
+# }
     return render(request, 'app/buscarpeli1.html')
 
 
@@ -136,7 +146,14 @@ def cartelera2(request):
     return render(request, 'app/cartelera2.html',contexto)
 
 def buscarpeli2(request):
+# parametro = request.POST['parametro']
+# busca=Pelicula.objects.filter(titulo_contain=parametro)
+# lista_categorias=Categoria.objects.all()
 
+# contexto={
+#     'busca':busca,
+#     'lista_categorias': lista_categorias
+# }
     return render(request, 'app/buscarpeli2.html')
 
 
@@ -150,9 +167,11 @@ def verpelis2(request):
 def verpeli2(request,id):
     peli =Pelicula.objects.get(pk=id)
     promedio= Calificacion.objects.values('pelicula').annotate(average_rating=Avg('valor'))
+    # comentario= Comentario.objects.values('pelicula')
     contexto = {
       'peli':peli,
-      'promedio' : promedio,
+      'promedio' : promedio
+    #   'comentario': comentario
     }
     return render(request, 'app/verpeli2.html', contexto)
 
@@ -183,25 +202,75 @@ def inicio3(request):
 def verpeli3(request,id):
     peli =Pelicula.objects.get(pk=id)
     promedio= Calificacion.objects.values('pelicula').annotate(average_rating=Avg('valor'))
+    # comentario= Comentario.objects.all()
     contexto = {
       'peli':peli,
-      'promedio' : promedio,
+      'promedio' : promedio
+    #   'comentario': comentario
     }
     return render(request, 'app/verpeli3.html', contexto)
 
 def verpelis3(request):
    lista_peli = Pelicula.objects.all()
+
    contexto = {
-        'lista_peli' : lista_peli
+        'lista_peli' : lista_peli,
+   
     }
    return render(request, 'app/verpelis3.html', contexto)
 
 
 
 def crearadmin3(request):
+    lista_usuario = User.objects.all()
+    contexto ={
+        'lista_usuario' : lista_usuario
+    }
 
-    return render(request, 'app/crearadmin3.html')
+    
+    return render(request, 'app/crearadmin3.html',contexto)
 
+def post_crear_admin3(request):
+    username=request.POST['username']
+    nombre=request.POST['nombre']
+    apellido=request.POST['apellido']
+    correo=request.POST['correo']
+    contraseña=request.POST['contraseña']
+    # admin=request.POST[1]
+
+    usuario=User()
+    usuario.username=username
+    usuario.first_name=nombre
+    usuario.last_name=apellido
+    usuario.email=correo
+    usuario.set_password(contraseña)
+    usuario.is_superuser='1'
+  
+    usuario.save()
+
+
+
+    # return HttpResponse(f'{username} {nombre} {apellido} {correo} {contraseña} ')
+    return redirect('app:crearadmin3')
+    # return HttpResponse('llegamos!!')
+
+# def post_crear_admin(request):
+#     nombre=request.POST['nombre']
+#     apellido=request.POST['apellido']
+#     correo=request.POST['correo']
+#     contraseña=request.POST['contraseña']
+
+#     # usuario=User()
+#     # usuario.first_name=nombre
+#     # usuario.last_name=apellido
+#     # usuario.email=correo
+#     # usuario.set_password(contraseña)
+  
+#     # usuario.save()
+
+
+#     return HttpResponse(f'{nombre} {apellido} {correo} {contraseña} ')
+#     # return redirect('app/login.html') 
 
 def listapeli3(request):
     lista_peliculas = Pelicula.objects.all()
@@ -284,24 +353,34 @@ def post_crear_categoria(request):
 #guardar la catgoria en la BD
     categoria.save()
 
-    return redirect('app/crearcategorias3.html')
+    return redirect('app:crearcategoria3')
 
 
 def editarpelicula3(request):
 
     return render(request, 'app/editarpelicula3.html')
 
-def login(request):
+def from_login(request):
 
-    return render(request, 'app/login.html')
+    return render(request, 'app/from_login.html')
 
 def post_login(request):
-    # correo=request.POST['correo']
-    # contraseña=request.POST['contraseña']
+    username=request.POST['username']
+    contraseña=request.POST['contraseña']
 
-#     usuario = authenticate(username=correo, password=contraseña)
+    usuario = authenticate(username=username, password=contraseña)
 
-# if
+    if usuario is not None:
+        # Inicia la sesión del usuario en el sistema
+        login(request, usuario)
+        # Redirecciona a una página de éxito
+        if usuario.is_superuser :
+            return redirect('app:inicio3')
+        else:
+            return redirect('app:inicio2')
+    else:
+        # Retorna un mensaje de error de login no válido
+        return render(request, 'app/login.html')
 
     return HttpResponse('llegamos!!')
 
@@ -311,22 +390,24 @@ def registro(request):
     return render(request, 'app/registro.html')
 
 def post_registro(request):
+    username=request.POST['username']
     nombre=request.POST['nombre']
     apellido=request.POST['apellido']
     correo=request.POST['correo']
     contraseña=request.POST['contraseña']
 
-    # usuario=User()
-    # usuario.first_name=nombre
-    # usuario.last_name=apellido
-    # usuario.email=correo
-    # usuario.set_password(contraseña)
+    usuario=User()
+    usuario.username=username
+    usuario.first_name=nombre
+    usuario.last_name=apellido
+    usuario.email=correo
+    usuario.set_password(contraseña)
+
   
-    # usuario.save()
+    usuario.save()
 
-
-    return HttpResponse(f'{nombre} {apellido} {correo} {contraseña} ')
-    # return redirect('app/login.html')
+    # return HttpResponse(f'{nombre} {apellido} {correo} {contraseña} ')
+    return redirect('app:login')
 
 def salir(request):
 	
@@ -340,3 +421,7 @@ def olvidecontraseña(request):
 def nuevacontraseña(request):
 
     return render(request, 'app/nuevacontraseña.html')
+
+
+
+

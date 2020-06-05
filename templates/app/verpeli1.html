@@ -128,7 +128,47 @@
                 <option value="5">5</option>
               </select>
             </a>
+            <div class="col"></div>
+          <div class="col"></div>
+          <div class="col"></div>
+          <div class="col"></div>
+          <div class="col"></div>
           
+            <div class="card card-primary">   
+              <div class="card-header">
+                <h3 class="card-title">Comentarios</h3>   
+              </div>
+            <div class="card-footer card-comments">
+              <div class="card-comment">
+                <!-- User image -->
+                <!-- <img class="img-circle img-sm" src="../dist/img/user3-128x128.jpg" alt="User Image"> -->
+                {% for comen in comentario %}
+                <div class="comment-text">
+                  <span class="username">
+                    {{ comen.usuario_ip }}
+                    <span class="text-muted float-right">{{ comen.fechaHora }}</span>
+                  </span><!-- /.username -->
+                  {{ comen.pelicula_ip }}
+                </div>
+                <!-- /.comment-text -->
+              </div>
+              <!-- /.card-comment -->
+              
+                {% endfor %}
+                <!-- /.comment-text -->
+                
+              </div>
+              <!-- <div class="input-group">
+                <input type="text" name="message" placeholder="Type Message ..." class="form-control">
+                <span class="input-group-append">
+                    <button type="submit" class="btn btn-primary">Send</button>
+                </span>
+              </div> -->
+              
+              <!-- /.card-comment -->
+            </div>
+          </div>
+        <!-- </div> -->
 
   </div>
 </div>

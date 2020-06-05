@@ -7,7 +7,9 @@ crear administrador
 
 {% block contenido %}
 
- 
+
+<form action="{% url 'app:post_crear_admin3' %}" method="post">
+  {% csrf_token %}
 <h1 class="display-1">crear administrador</h1>
 
 
@@ -15,32 +17,38 @@ crear administrador
     <div class="col-md-6 mb-md-0 p-md-4">
        <form>
         <form>
-           
+                  <div class="form-group row">
+                          
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Username</label>
+                    <div class="col-sm-10">
+                    <input type="text" class="form-control" placeholder="Username" name="username">
+                </div>
+                </div>
                 <div class="form-group row">
                   
                     <label for="inputEmail3" class="col-sm-2 col-form-label">Nombre</label>
                     <div class="col-sm-10">
-                    <input type="text" class="form-control" placeholder="Nombre">
+                    <input type="text" class="form-control" placeholder="Nombre" name="nombre">
                 </div>
                 </div>
                 <div class="form-group row">
                   
                     <label for="inputEmail3" class="col-sm-2 col-form-label">Apellido</label>
                     <div class="col-sm-10">
-                    <input type="text" class="form-control" placeholder="Apellido">
+                    <input type="text" class="form-control" placeholder="Apellido" name="apellido">
                 </div>
                 </div>
 
             <div class="form-group row">
               <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
               <div class="col-sm-10">
-                <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+                <input type="email" class="form-control" id="inputEmail3" placeholder="Email" name="correo" >
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword3" class="col-sm-2 col-form-label">Password</label>
+              <label for="inputPassword3" class="col-sm-2 col-form-label">Contraseña</label>
               <div class="col-sm-10">
-                <input type="password" class="form-control" id="inputPassword3"placeholder="Contraseña">
+                <input type="password" class="form-control" id="inputPassword3"placeholder="Contraseña" name="contraseña">
               </div>
             </div>
            
@@ -66,9 +74,9 @@ crear administrador
               <th style="width: 30%">
                 Email
             </th>
-              <th style="width: 10%" class="text-center">
+              <!-- <th style="width: 10%" class="text-center">
                 Contraseña
-              </th>
+              </th> -->
               <th style="width: 10%">
                 Editar
               </th>
@@ -76,125 +84,36 @@ crear administrador
           </tr>
       </thead>
       <tbody>
+        {% for c in lista_usuario %}
           <tr>
               <td>
-                  Ingrid
+                {{ c.first_name }}
               </td>
               <td>
                 
                   <a>
-                    Rincon
+                  {{ c.last_name }}
                   </a>
                 
 
               </td>
               <td>
                 <a>
-                    ingrid@rankingmovie.com
+                  {{ c.email }}
                 </a>
 
             </td>
-              <td class="project-state">
-                <a >
-                    ingrid123
-                </a>
-              </td>
+           
               <td class="project-state">
                 <a class="btn btn-primary btn-sm" href="#">
                     <i class="far fa-edit">editar</i>
                 </a>
               </td>
-              
+              {% endfor %} 
           </tr>
-          <tr>
-            <td>
-                Jesus
-            </td>
-            <td>
-              
-                <a>
-                  Blanco
-                </a>
-              
 
-            </td>
-            <td>
-              <a>
-                  jesus@rankingmovie.com
-              </a>
-
-          </td>
-            <td class="project-state">
-              <a >
-                  jesus123
-              </a>
-            </td>
-            <td class="project-state">
-              <a class="btn btn-primary btn-sm" href="#">
-                  <i class="far fa-edit">editar</i>
-              </a>
-            </td>
-            
-        </tr>
-        <tr>
-          <td>
-              paola
-          </td>
-          <td>
-            
-              <a>
-                Buitrago
-              </a>
-            
-
-          </td>
-          <td>
-            <a>
-                paolarankingmovie.com
-            </a>
-
-        </td>
-          <td class="project-state">
-            <a >
-                paola123
-            </a>
-          </td>
-          <td class="project-state">
-            <a class="btn btn-primary btn-sm" href="#">
-                <i class="far fa-edit">editar</i>
-            </a>
-          </td>
           
-      </tr>
       
-      <tr>
-        <td>
-            Alberto
-        </td>
-        <td>
-          
-            <a>
-              Barbosa
-            </a>
-          
-
-        </td>
-        <td>
-          <a>
-              alberto@rankingmovie.com
-          </a>
-
-      </td>
-        <td class="project-state">
-          <a >
-              alberto123
-          </a>
-        </td>
-        <td class="project-state">
-          <a class="btn btn-primary btn-sm" href="#">
-              <i class="far fa-edit">editar</i>
-          </a>
-        </td>
         
     </tr>
             
